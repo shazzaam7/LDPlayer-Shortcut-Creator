@@ -5,14 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ShortcutCreatorLDPlayer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="250" Width="400" ResizeMode="NoResize">
+        Title="LDPlayer Shortcut Creator" Height="320" Width="400" ResizeMode="NoResize">
     <Grid>
         <TextBox x:Name="LDPlayerPath" HorizontalAlignment="Left" Margin="200,24,0,0" TextWrapping="NoWrap" Text="&quot;C:\LDPlayer\LDPlayer9\&quot;" VerticalAlignment="Top" Width="160" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <TextBox x:Name="InstanceName" HorizontalAlignment="Left" Margin="200,84,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <TextBox x:Name="AppName" HorizontalAlignment="Left" Margin="200,144,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Button x:Name="CreateButton" Content="Create" HorizontalAlignment="Left" Margin="261,184,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.131,0.503" Click="CreateButton_Click"/>
+        <TextBox x:Name="ShortcutName" HorizontalAlignment="Left" Margin="200,204,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Button x:Name="CreateButton" Content="Create" HorizontalAlignment="Left" Margin="261,244,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.131,0.503" Click="CreateButton_Click"/>
         <Label Content="LDPlayer Installation Path" HorizontalAlignment="Left" Margin="25,14,0,0" VerticalAlignment="Top" Height="40" Width="155" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Label Content="LDPlayer Instance Name" HorizontalAlignment="Left" Margin="25,74,0,0" VerticalAlignment="Top" Height="40" Width="155" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Label Content="Package Name" HorizontalAlignment="Left" Margin="25,134,0,0" VerticalAlignment="Top" Height="40" Width="155" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label Content="Shortcut Name" HorizontalAlignment="Left" Margin="25,194,0,0" VerticalAlignment="Top" Height="40" Width="155" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
     </Grid>
 </Window>

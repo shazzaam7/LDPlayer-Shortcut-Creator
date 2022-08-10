@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.IO; 
+using System.IO;
+using Microsoft.Win32;
+
 namespace ShortcutCreatorLDPlayer
 {
     /// <summary>
@@ -25,10 +27,8 @@ namespace ShortcutCreatorLDPlayer
             InitializeComponent();
         }
 
-        string Path, IName, AName;
+        string Path, IName, AName, SName;
 
-        string echo1 = "\"Waiting For Launch Complete\"";
-        string echo2 = "\"define MY_VAR variable and set it to get running ldplayer emu device list and get first line\"";
         string doSet = "\"MY_VAR =%% I\"";
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -38,6 +38,7 @@ namespace ShortcutCreatorLDPlayer
                 Path = LDPlayerPath.Text.ToString();
                 IName = InstanceName.Text.ToString();
                 AName = AppName.Text.ToString();
+                SName = ShortcutName.Text.ToString() + ".bat";
             }
             catch 
             {
@@ -48,22 +49,24 @@ namespace ShortcutCreatorLDPlayer
             {
                 Path = "\"C:\\LDPlayer\\LDPlayer9\\\"";
             }
-            
-            using (StreamWriter sw = new StreamWriter("test.bat"))
+
+            using (StreamWriter sw = new StreamWriter(SName))
             {
-                sw.WriteLine("@echo off");
-                sw.WriteLine("cd " + Path);
-                sw.WriteLine("dnconsole.exe launch --name " + IName);
-                sw.WriteLine("echo " + echo1);
-                sw.WriteLine(":waitt");
-                sw.WriteLine("Timeout 1");
-                sw.WriteLine("@SET MY_VAR=");
-                sw.WriteLine("FOR /F %%I IN ('ldconsole.exe runninglist') DO @SET " + doSet);
-                sw.WriteLine("@REM");
-                sw.WriteLine("echo %MY_VAR%");
-                sw.WriteLine("ldconsole runapp --name Main --packagename " + AName);
-                sw.WriteLine(":end");
-                sw.WriteLine("break;");
+                sw.Write("@echo off" +
+                    "\ncd " + Path +
+                    "\ndnconsole.exe launch --name " + IName +
+                    "\n:waitt" +
+                    "\nTimeout 1" +
+                    "\n@SET MY_VAR=" +
+                    "\nFOR /F %%I IN ('ldconsole.exe runninglist') DO @SET " + doSet +
+                    "\n@REM" +
+                    "\necho %MY_VAR% FIND /I" + IName + ">Nul && (\n ldconsole runapp --name Main --packagename " + AName +
+                    "\n goto :end" + "\n) || (" +
+                    "\n goto :waitt" +
+                    "\n)" +
+                    "\n:end" +
+                    "\nbreak;"
+              );
             }
         }
     }
