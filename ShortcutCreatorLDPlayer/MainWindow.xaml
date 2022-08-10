@@ -1,0 +1,18 @@
+﻿<Window x:Class="ShortcutCreatorLDPlayer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ShortcutCreatorLDPlayer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="200" Width="255">
+    <Grid>
+        <TextBox x:Name="LDPlayerPath" Margin="145,10,10,154" TextWrapping="Wrap" AutomationProperties.Name="txtPath" Width="100" Height="20"/>
+        <TextBox x:Name="InstanceName" Margin="145,50,10,114" TextWrapping="Wrap" AutomationProperties.Name="txtInstanceName" Width="100" Height="20"/>
+        <TextBox x:Name="AppName" Height="20" Margin="145,88,10,0" TextWrapping="Wrap" VerticalAlignment="Top" AutomationProperties.Name="txtAppName" Width="100"/>
+        <Label Content="LDPlayer Installation Path" Margin="10,11,0,154" FontSize="8" HorizontalContentAlignment="Center" Width="125" HorizontalAlignment="Left" Height="19"/>
+
+
+        <Button x:Name="Create" Content="Create" Margin="0,140,0,0" VerticalAlignment="Top" AutomationProperties.Name="btnCreate" Height="20" HorizontalAlignment="Center" Width="40" Grid.Column="1" Click="Create_Click"/>
+    </Grid>
+</Window>
