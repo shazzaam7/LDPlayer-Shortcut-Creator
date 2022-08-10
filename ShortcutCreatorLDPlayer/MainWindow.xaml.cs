@@ -12,8 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.IO;
-
+using System.IO; 
 namespace ShortcutCreatorLDPlayer
 {
     /// <summary>
@@ -26,23 +25,46 @@ namespace ShortcutCreatorLDPlayer
             InitializeComponent();
         }
 
+        string Path, IName, AName;
+
+        string echo1 = "\"Waiting For Launch Complete\"";
+        string echo2 = "\"define MY_VAR variable and set it to get running ldplayer emu device list and get first line\"";
+        string doSet = "\"MY_VAR =%% I\"";
+
         private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
-            string Path, IName, AName;
             try
             {
                 Path = LDPlayerPath.Text.ToString();
+                IName = InstanceName.Text.ToString();
+                AName = AppName.Text.ToString();
             }
             catch 
             {
                 MessageBox.Show("Needs to be a string");
                 return;
             }
-            using (StreamWriter sw = new StreamWriter("test.exe"))
+            if (Path.Length <= 0)
             {
-                sw.Write("Test123");
+                Path = "\"C:\\LDPlayer\\LDPlayer9\\\"";
             }
-            MessageBox.Show(Path);
+            
+            using (StreamWriter sw = new StreamWriter("test.bat"))
+            {
+                sw.WriteLine("@echo off");
+                sw.WriteLine("cd " + Path);
+                sw.WriteLine("dnconsole.exe launch --name " + IName);
+                sw.WriteLine("echo " + echo1);
+                sw.WriteLine(":waitt");
+                sw.WriteLine("Timeout 1");
+                sw.WriteLine("@SET MY_VAR=");
+                sw.WriteLine("FOR /F %%I IN ('ldconsole.exe runninglist') DO @SET " + doSet);
+                sw.WriteLine("@REM");
+                sw.WriteLine("echo %MY_VAR%");
+                sw.WriteLine("ldconsole runapp --name Main --packagename " + AName);
+                sw.WriteLine(":end");
+                sw.WriteLine("break;");
+            }
         }
     }
 }

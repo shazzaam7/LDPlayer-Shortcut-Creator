@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="250" Width="400" ResizeMode="NoResize">
     <Grid>
-        <TextBox x:Name="LDPlayerPath" HorizontalAlignment="Left" Margin="200,24,0,0" TextWrapping="NoWrap" Text="Default Value is &quot;C:\LDPlayer\LDPlayer9\&quot;" VerticalAlignment="Top" Width="160" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="LDPlayerPath" HorizontalAlignment="Left" Margin="200,24,0,0" TextWrapping="NoWrap" Text="&quot;C:\LDPlayer\LDPlayer9\&quot;" VerticalAlignment="Top" Width="160" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <TextBox x:Name="InstanceName" HorizontalAlignment="Left" Margin="200,84,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <TextBox x:Name="AppName" HorizontalAlignment="Left" Margin="200,144,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="160" Height="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Button x:Name="CreateButton" Content="Create" HorizontalAlignment="Left" Margin="261,184,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.131,0.503" Click="CreateButton_Click"/>
