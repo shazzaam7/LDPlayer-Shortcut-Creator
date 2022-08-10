@@ -13,8 +13,5 @@ namespace ShortcutCreatorLDPlayer
     /// </summary>
     public partial class App : Application
     {
-        private void Create_Click(object sender, RoutedEventArgs e)
-        {
-        }
     }
 }

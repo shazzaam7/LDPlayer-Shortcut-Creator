@@ -26,21 +26,23 @@ namespace ShortcutCreatorLDPlayer
             InitializeComponent();
         }
 
-        private void Create_Click(object sender, RoutedEventArgs e)
+        private void CreateButton_Click(object sender, RoutedEventArgs e)
         {
             string Path, IName, AName;
             try
             {
-                Path = LDPlayerPath.Text;
-                IName = InstanceName.Text;
-                AName = InstanceName.Text;
+                Path = LDPlayerPath.Text.ToString();
             }
-            catch (Exception)
+            catch 
             {
-                MessageBox.Show("Inputs are not strings.");
+                MessageBox.Show("Needs to be a string");
                 return;
             }
-
+            using (StreamWriter sw = new StreamWriter("test.exe"))
+            {
+                sw.Write("Test123");
+            }
+            MessageBox.Show(Path);
         }
     }
 }
