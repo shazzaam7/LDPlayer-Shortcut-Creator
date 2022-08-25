@@ -13,7 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
-using Microsoft.Win32;
+using IWshRuntimeLibrary;
+
 
 namespace ShortcutCreatorLDPlayer
 {
@@ -27,8 +28,7 @@ namespace ShortcutCreatorLDPlayer
             InitializeComponent();
         }
 
-        string Path, IName, AName, SName;
-
+        string Path, IName, AName, SaveDirectory, SName;
         string doSet = "\"MY_VAR =%% I\"";
 
         private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -38,7 +38,8 @@ namespace ShortcutCreatorLDPlayer
                 Path = LDPlayerPath.Text.ToString();
                 IName = InstanceName.Text.ToString();
                 AName = AppName.Text.ToString();
-                SName = ShortcutName.Text.ToString() + ".bat";
+                SName = ShortcutName.Text.ToString();
+                SaveDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\XuanZhi9\";
             }
             catch 
             {
@@ -47,20 +48,23 @@ namespace ShortcutCreatorLDPlayer
             }
             if (Path.Length <= 0)
             {
-                Path = "\"C:\\LDPlayer\\LDPlayer9\\\"";
+                //Path = "\"C:\\LDPlayer\\LDPlayer9\\\"";
+                Path = @"C:\LDPlayer\LDPlayer9\";
             }
 
-            using (StreamWriter sw = new StreamWriter(SName))
+            string temp = SaveDirectory + SName + ".bat";
+
+            using (StreamWriter sw = new StreamWriter(temp))
             {
                 sw.Write("@echo off" +
                     "\ncd " + Path +
                     "\ndnconsole.exe launch --name " + IName +
                     "\n:waitt" +
-                    "\nTimeout 1" +
+                    "\nTimeout 10" +
                     "\n@SET MY_VAR=" +
                     "\nFOR /F %%I IN ('ldconsole.exe runninglist') DO @SET " + doSet +
                     "\n@REM" +
-                    "\necho %MY_VAR% FIND /I" + IName + ">Nul && (\n ldconsole runapp --name Main --packagename " + AName +
+                    "\necho %MY_VAR% FIND /I" + IName + ">Nul && (\n ldconsole runapp --name " + IName + " --packagename " + AName +
                     "\n goto :end" + "\n) || (" +
                     "\n goto :waitt" +
                     "\n)" +
@@ -68,6 +72,15 @@ namespace ShortcutCreatorLDPlayer
                     "\nbreak;"
               );
             }
+
+            object shDesktop = (object)"Desktop";
+            WshShell shell = new WshShell();
+            string shortcutAddress = (string)shell.SpecialFolders.Item(ref shDesktop) + @"\" + SName + ".lnk";
+            IWshShortcut ShortCut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
+            ShortCut.Description = "Shortcut for " + SName;
+            ShortCut.TargetPath = temp;
+            ShortCut.IconLocation = @"C:\LDPlayer\LDPlayer9\apk_icon.ico";
+            ShortCut.Save();
         }
     }
 }
