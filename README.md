@@ -14,8 +14,8 @@ NOTE 2: I only tested this with LDPlayer9.
 2.b) The name of your LDPlayer instance. Default name for LDPlayer instance is LDPlayer so insert that into the text box or if you named it something different insert that instead.
   
 2.c) Package name of the app you want to create shortcut of. Go to the Google Play Store and find your app, then check your link. It should look like this:
-  https://play.google.com/store/apps/details?id=com.tozelabs.tvshowtime
-     What we want is this com.tozelabs.tvshowtime in my example. Copy and paste it into the Shortcut Creator.
+  https://play.google.com/store/apps/details?id=com.myapp.appname
+     What we want is this com.myapp,appname in my example. Copy and paste it into the Shortcut Creator.
      
 2.d) And finally, name your Shortcut. After that click on Create button and your new Shortcut should appear next to the Shortcut Creator executable.
   
