@@ -5,6 +5,7 @@ Huuge props to reddit users for creating guides on these .bat shortcuts such as:
 
 How to create and run your new shortcut:
 NOTE: I only tested this with LDPlayer9.
+NOTE2: Make sure you ran the application inside LDPlayer at least once so it shows up in the ComboBox.
 
 1. Download the program from release tab.
 2. You need to insert your Instance name and check for Installation Path if it's correct. 
