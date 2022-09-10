@@ -12,6 +12,9 @@ using HtmlAgilityPack;
 using IWshRuntimeLibrary;
 using Microsoft.Win32;
 using ImageMagick;
+using System.Diagnostics;
+using System.Reflection;
+using System.Security.Principal;
 
 
 namespace ShortcutCreatorLDPlayer
@@ -28,7 +31,9 @@ namespace ShortcutCreatorLDPlayer
         public MainWindow()
         {
             InitializeComponent();
+            CheckIfRunAsAdmin();
             InstallationPathFinder();
+            FindInstances();
             CheckIfFoldersExist();
             FindInstalledApps();
             GC.Collect();
@@ -38,15 +43,20 @@ namespace ShortcutCreatorLDPlayer
 
         private void CreateShortcut_Click(object sender, RoutedEventArgs e)
         {
+            if (Instances.SelectedIndex < 0)
+            {
+                MessageBox.Show("You have to choose the instance.");
+                return;
+            }
             if (InstalledApps.SelectedIndex < 0)
             {
-                MessageBox.Show("You gotta choose installed App");
+                MessageBox.Show("You have to choose the app you want to create shortcut for.");
                 return;
             }
             try
             {
                 Path = InstallationPath.Text;
-                IName = InstanceName.Text;
+                IName = Instances.SelectedItem.ToString();
                 AName = InstalledApps.SelectedItem.ToString();
                 SName = ShortcutName.Text;
             }
@@ -131,6 +141,18 @@ namespace ShortcutCreatorLDPlayer
         }
 
         // Methods
+
+        private void CheckIfRunAsAdmin()
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            if (!principal.IsInRole(WindowsBuiltInRole.Administrator))
+            {
+                MessageBox.Show("Run as administrator!");
+                Environment.Exit(0);
+            }
+        }
+
         private void InstallationPathFinder()
         {
             RegistryKey InstallPathLocation = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\XuanZhi\LDPlayer9");
@@ -182,21 +204,46 @@ namespace ShortcutCreatorLDPlayer
 
         private void IconGrabber()
         {
-            WebClient wClient = new WebClient();
-            var src = "https://play.google.com/store/apps/details?id=" + InstalledApps.SelectedItem.ToString();
-            string srcHTML = wClient.DownloadString(src);
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(srcHTML);
-            var ImageURL = doc.DocumentNode.SelectSingleNode("//img").Attributes["src"].Value; //img[@alt='Icon Image']
-            using (WebClient client = new WebClient())
+            if (!System.IO.File.Exists(IconsDirectory + @"\" + ShortcutName.Text + ".ico"))
             {
-                client.DownloadFile(new Uri(ImageURL), IconsDirectory + @"\" + ShortcutName.Text + ".png");
+                WebClient wClient = new WebClient();
+                var src = "https://play.google.com/store/apps/details?id=" + InstalledApps.SelectedItem.ToString();
+                string srcHTML = wClient.DownloadString(src);
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(srcHTML);
+                var ImageURL = doc.DocumentNode.SelectSingleNode("//img").Attributes["src"].Value; //img[@alt='Icon Image']
+                using (WebClient client = new WebClient())
+                {
+                    client.DownloadFile(new Uri(ImageURL), IconsDirectory + @"\" + ShortcutName.Text + ".png");
+                }
+                using (MagickImage convertImage = new MagickImage(IconsDirectory + @"\" + ShortcutName.Text + ".png"))
+                {
+                    convertImage.Write(IconsDirectory + @"\" + ShortcutName.Text + ".ico");
+                }
+                System.IO.File.Delete(IconsDirectory + @"\" + ShortcutName.Text + ".png");
             }
-            using (MagickImage convertImage = new MagickImage(IconsDirectory + @"\" + ShortcutName.Text + ".png"))
+        }
+
+        private void FindInstances()
+        {
+
+            string console = Path;
+            Process findInstance = new Process();
+            findInstance.StartInfo.UseShellExecute = false;
+            findInstance.StartInfo.FileName = Path + "dnconsole.exe";
+            findInstance.StartInfo.RedirectStandardOutput = true;
+            findInstance.StartInfo.CreateNoWindow = true;
+            MessageBox.Show(Path + "dnconsole.exe");
+            findInstance.StartInfo.Arguments = "list";
+            findInstance.Start();
+            string output = findInstance.StandardOutput.ReadToEnd();
+            findInstance.WaitForExit();
+            string[] outputSorted = output.Split(Environment.NewLine.ToCharArray());
+            outputSorted = Array.FindAll(outputSorted, i => i!= "").ToArray();
+            foreach (string item in outputSorted)
             {
-                convertImage.Write(IconsDirectory + @"\" + ShortcutName.Text + ".ico");
+                Instances.Items.Add(item);
             }
-            System.IO.File.Delete(IconsDirectory + @"\" + ShortcutName.Text + ".png");
         }
     }
 }

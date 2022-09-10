@@ -9,8 +9,8 @@
     <Grid>
         <TextBox x:Name="InstallationPath" HorizontalAlignment="Left" Margin="280,24,0,0" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Width="180" Height="20" TextAlignment="Center" FontSize="14"/>
         <Label Content="LDPlayer Installation Path" HorizontalAlignment="Left" Margin="40,19,0,0" VerticalAlignment="Top" Height="30" Width="180" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Top"/>
-        <TextBox x:Name="InstanceName" HorizontalAlignment="Left" Margin="280,84,0,0" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Width="180" Height="20" TextAlignment="Center" FontSize="14"/>
         <Label Content="Name of the Instance" HorizontalAlignment="Left" Margin="40,79,0,0" VerticalAlignment="Top" Height="30" Width="180" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+        <ComboBox x:Name="Instances" HorizontalAlignment="Left" Margin="280,84,0,0" VerticalAlignment="Top" Width="180" Height="20"/>
         <Button x:Name="CreateShortcut" Content="Create" HorizontalAlignment="Left" Margin="340,259,0,0" VerticalAlignment="Top" Width="60" FontSize="14" Height="30" Click="CreateShortcut_Click"/>
         <Label Content="Installed Apps" HorizontalAlignment="Left" Margin="40,139,0,0" VerticalAlignment="Top" Height="30" Width="180" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
         <ComboBox x:Name="InstalledApps" HorizontalAlignment="Left" Margin="280,144,0,0" VerticalAlignment="Top" Width="180" Height="20" SelectionChanged="InstalledApps_SelectionChanged"/>
