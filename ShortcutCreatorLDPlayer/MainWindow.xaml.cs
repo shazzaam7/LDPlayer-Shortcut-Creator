@@ -1,20 +1,17 @@
-﻿using System;
+﻿//Default
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+//Imported
 using System.IO;
+using System.Net;
+using HtmlAgilityPack;
 using IWshRuntimeLibrary;
 using Microsoft.Win32;
+using ImageMagick;
 
 
 namespace ShortcutCreatorLDPlayer
@@ -25,28 +22,33 @@ namespace ShortcutCreatorLDPlayer
     public partial class MainWindow : Window
     {
 
-        string Path, IName, AName, SName, SaveDirectory;
+        string Path, IName, AName, SName, CustomShortcutDirectory, IconsDirectory;
         string doSet = "\"MY_VAR =%% I\"";
         Dictionary<string, string> Apps = new Dictionary<string, string>();
-
         public MainWindow()
         {
             InitializeComponent();
             InstallationPathFinder();
+            CheckIfFoldersExist();
             FindInstalledApps();
+            GC.Collect();
         }
 
         // Events
 
         private void CreateShortcut_Click(object sender, RoutedEventArgs e)
         {
+            if (InstalledApps.SelectedIndex < 0)
+            {
+                MessageBox.Show("You gotta choose installed App");
+                return;
+            }
             try
             {
                 Path = InstallationPath.Text;
                 IName = InstanceName.Text;
                 AName = InstalledApps.SelectedItem.ToString();
                 SName = ShortcutName.Text;
-                SaveDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\XuanZhi9\";
             }
             catch
             {
@@ -54,36 +56,56 @@ namespace ShortcutCreatorLDPlayer
             }
             if (IName.Length <= 0)
             {
-                IName = "Main";
+                IName = "LDPlayer";
             }
-
-            string tempSave = SaveDirectory + SName + ".bat";
+            string tempSave = CustomShortcutDirectory + @"\" + SName + ".bat";
             using (StreamWriter sw = new StreamWriter(tempSave))
             {
-                sw.Write("@echo off" +
-                    "\ncd " + Path +
-                    "\ndnconsole.exe launch --name " + IName + 
-                    "\n:waitt" +
-                    "\nTimeout 10" +
-                    "\n@SET MY_VAR=" +
-                    "\nFOR /F %%I IN ('ldconsole.exe runninglist') DO @SET " + doSet +
-                    "\n@REM" +
-                    "\necho %MY_VAR% FIND /I" + IName + ">Nul && (\n ldconsole runapp --name " + IName + " --packagename " + AName +
-                    "\n goto :end" + "\n) || (" +
-                    "\n goto :waitt" +
-                    "\n)" +
-                    "\n:end" +
-                    "\nbreak;"
-                );
+                if (Path.StartsWith("C:"))
+                {
+                    sw.Write("@echo off" +
+                        "\ncd " + Path +
+                        "\ndnconsole.exe launch --name " + IName +
+                        "\n:waitt" +
+                        "\nTimeout 10" +
+                        "\n@SET MY_VAR=" +
+                        "\nFOR /F %%I IN ('ldconsole.exe runninglist') DO @SET " + doSet +
+                        "\n@REM" +
+                        "\necho %MY_VAR% FIND /I" + IName + ">Nul && (\n ldconsole runapp --name " + IName + " --packagename " + AName +
+                        "\n goto :end" + "\n) || (" +
+                        "\n goto :waitt" +
+                        "\n)" +
+                        "\n:end" +
+                        "\nbreak;"
+                    );
+                }
+                else
+                {
+                    sw.Write("@echo off" +
+                        "\ncd /d " + Path +
+                        "\ndnconsole.exe launch --name " + IName +
+                        "\n:waitt" +
+                        "\nTimeout 15" +
+                        "\n@SET MY_VAR=" +
+                        "\nFOR /F %%I IN ('ldconsole.exe runninglist') DO @SET " + doSet +
+                        "\n@REM" +
+                        "\necho %MY_VAR% FIND /I" + IName + ">Nul && (\n ldconsole runapp --name " + IName + " --packagename " + AName +
+                        "\n goto :end" + "\n) || (" +
+                        "\n goto :waitt" +
+                        "\n)" +
+                        "\n:end" +
+                        "\nbreak;"
+                    );
+                }
             }
-
+            IconGrabber();
             object Desktop = (object)"Desktop";
             WshShell shell = new WshShell();
             string ShortcutAddress = (string)shell.SpecialFolders.Item(ref Desktop) + @"\" + SName + ".lnk";
             IWshShortcut Shortcut = (IWshShortcut)shell.CreateShortcut(ShortcutAddress);
             Shortcut.Description = "Shortcut for " + SName + " installed on LDPlayer";
             Shortcut.TargetPath = tempSave;
-            Shortcut.IconLocation = @"C:\LDPlayer\LDPlayer9\apk_icon.ico";
+            Shortcut.IconLocation = IconsDirectory + @"\" + SName + ".ico";
             Shortcut.Save();
         }
 
@@ -94,7 +116,7 @@ namespace ShortcutCreatorLDPlayer
             {
                 selectedItem = InstalledApps.SelectedItem.ToString();
             }
-            catch 
+            catch
             {
                 return;
             }
@@ -111,40 +133,36 @@ namespace ShortcutCreatorLDPlayer
         // Methods
         private void InstallationPathFinder()
         {
-            RegistryKey finder = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall");
-            string location = FindByDisplayName(finder, "LDPlayer");
-            InstallationPath.Text = location.Remove(location.LastIndexOf('\\')) + "\\";
+            RegistryKey InstallPathLocation = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\XuanZhi\LDPlayer9");
+            string location = InstallPathLocation.GetValue("InstallDir").ToString();
+            InstallationPath.Text = location;
+            CustomShortcutDirectory = location + "CustomShortcuts";
+            IconsDirectory = CustomShortcutDirectory + @"\Icons";
             Path = InstallationPath.Text;
         }
 
-        private string FindByDisplayName(RegistryKey AllInstalledSoftware, string Name)
+        private void CheckIfFoldersExist()
         {
-            string[] nameList = AllInstalledSoftware.GetSubKeyNames();
-            for (int i = 0; i < nameList.Length; i++)
+            string IconsDirectory = CustomShortcutDirectory + @"\Icons";
+            if (!Directory.Exists(CustomShortcutDirectory))
             {
-                RegistryKey tempInstallation = AllInstalledSoftware.OpenSubKey(nameList[i]);
-                if (tempInstallation.GetValue("DisplayName") == null)
-                {
-                    continue;
-                }
-                else
-                {
-                    try
-                    {
-                        if (string.Equals(tempInstallation.GetValue("DisplayName").ToString(), Name))
-                        {
-                            return tempInstallation.GetValue("DisplayIcon").ToString();
-                        }
-                    }
-                    catch { }
-                }
+                Directory.CreateDirectory(CustomShortcutDirectory);
             }
-            return "";
+            if (!Directory.Exists(IconsDirectory))
+            {
+                Directory.CreateDirectory(IconsDirectory);
+            }
         }
 
         private void FindInstalledApps()
         {
             string AppList = Path + "appNames.text";
+            if (!System.IO.File.Exists(AppList))
+            {
+                MessageBox.Show("You need to run your applications first in LDPlayer to be able to create shortcuts");
+                Environment.Exit(0);
+            }
+
             using (StreamReader sr = new StreamReader(AppList))
             {
                 string line = sr.ReadLine();
@@ -160,6 +178,25 @@ namespace ShortcutCreatorLDPlayer
                     InstalledApps.Items.Add(Apps[key]);
                 }
             }
+        }
+
+        private void IconGrabber()
+        {
+            WebClient wClient = new WebClient();
+            var src = "https://play.google.com/store/apps/details?id=" + InstalledApps.SelectedItem.ToString();
+            string srcHTML = wClient.DownloadString(src);
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(srcHTML);
+            var ImageURL = doc.DocumentNode.SelectSingleNode("//img").Attributes["src"].Value; //img[@alt='Icon Image']
+            using (WebClient client = new WebClient())
+            {
+                client.DownloadFile(new Uri(ImageURL), IconsDirectory + @"\" + ShortcutName.Text + ".png");
+            }
+            using (MagickImage convertImage = new MagickImage(IconsDirectory + @"\" + ShortcutName.Text + ".png"))
+            {
+                convertImage.Write(IconsDirectory + @"\" + ShortcutName.Text + ".ico");
+            }
+            System.IO.File.Delete(IconsDirectory + @"\" + ShortcutName.Text + ".png");
         }
     }
 }
