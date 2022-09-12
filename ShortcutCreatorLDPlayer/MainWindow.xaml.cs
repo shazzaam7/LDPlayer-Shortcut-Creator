@@ -36,8 +36,8 @@ namespace ShortcutCreatorLDPlayer
                 MessageBox.Show("Run as administrator!");
                 Environment.Exit(0);
             }
-            CheckIfFoldersExist(); //Checks if all of the folders necessary for this program to work exist
             InstallationPathFinder(); //Finds installation folder of LDPlayer
+            CheckIfFoldersExist(); //Checks if all of the folders necessary for this program to work exist
             if (!System.IO.File.Exists("firstrun.fr"))
             {
                 MessageBoxResult result = MessageBox.Show("Do you want to run First Run setup to make sure the program works properly?"," ", MessageBoxButton.YesNo);
@@ -48,7 +48,7 @@ namespace ShortcutCreatorLDPlayer
                 {
                     System.IO.File.Create("firstrun.fr");
                 }
-            }
+            }         
             FindInstances(); //Finds all of the instances in LDPlayer (Requires Administrator)
             FindInstalledApps(); //Finds all of the apps installed in LDPlayer
             GC.Collect(); //Collects unnecessary garbage
