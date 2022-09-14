@@ -141,6 +141,9 @@ namespace ShortcutCreatorLDPlayer
             {
 
             }
+
+            string search = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+            search = search.Substring(0, search.LastIndexOf(@"\Startup")) + @"\" + SName + ".lnk";
             object Desktop = (object)"Desktop";
             WshShell shell = new WshShell(); //New shell
             string ShortcutLocation = (string)shell.SpecialFolders.Item(ref Desktop) + @"\" + SName + ".lnk"; //Location of the Shortcut (Desktop)
@@ -163,6 +166,10 @@ namespace ShortcutCreatorLDPlayer
                     fs.WriteByte(0x22);
                 }
             }
+            if (AddShortcutToSearch.IsChecked == true)
+            {
+                System.IO.File.Copy(ShortcutLocation, search, true);
+            };
         }
 
         private void InstalledApps_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -309,6 +316,5 @@ namespace ShortcutCreatorLDPlayer
                 System.IO.File.Delete(IconsDirectory + @"\" + ShortcutName.Text + ".png");
             }
         }
-
     }
 }
