@@ -142,8 +142,7 @@ namespace ShortcutCreatorLDPlayer
 
             }
 
-            string search = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
-            search = search.Substring(0, search.LastIndexOf(@"\Startup")) + @"\" + SName + ".lnk";
+            string search = Environment.GetFolderPath(Environment.SpecialFolder.StartMenu) + @"\Programs\LDPlayer9\" + SName + ".lnk";
             object Desktop = (object)"Desktop";
             WshShell shell = new WshShell(); //New shell
             string ShortcutLocation = (string)shell.SpecialFolders.Item(ref Desktop) + @"\" + SName + ".lnk"; //Location of the Shortcut (Desktop)
@@ -301,7 +300,17 @@ namespace ShortcutCreatorLDPlayer
                 string srcHTML = wClient.DownloadString(src); //Downloads the HTML of the site
                 HtmlDocument doc = new HtmlDocument(); //Instancing new doc
                 doc.LoadHtml(srcHTML); //Loading the downloaded HTML
-                var ImageURL = doc.DocumentNode.SelectSingleNode("//img").Attributes["src"].Value; //Trying to find img in the HTML
+                var ImageURLFinder = doc.DocumentNode.SelectNodes("//img"); //Trying to find img in the HTML
+                var ImageURL = "";
+                foreach (var item in ImageURLFinder)
+                {
+                    if (item.Attributes["src"].Value.StartsWith("https://play-lh.googleusercontent.com/"))
+                    {
+                        Console.WriteLine(item.Attributes["src"].Value);
+                        ImageURL = item.Attributes["src"].Value;
+                        break;
+                    }
+                }
                 //WebClient downloads the icon as a .png
                 using (WebClient client = new WebClient())
                 {
