@@ -24,7 +24,7 @@ namespace ShortcutCreatorLDPlayer
     public partial class MainWindow : Window
     {
 
-        string Path, IName, AName, SName, CustomShortcutDirectory, IconsDirectory;
+        string Path, IName, AName, SName, loadingTime, CustomShortcutDirectory, IconsDirectory;
         string doSet = "\"MY_VAR =%% I\"";
         Dictionary<string, string> Apps = new Dictionary<string, string>();
         public MainWindow()
@@ -78,6 +78,7 @@ namespace ShortcutCreatorLDPlayer
                 IName = Instances.SelectedItem.ToString();
                 AName = InstalledApps.SelectedItem.ToString();
                 SName = ShortcutName.Text;
+                loadingTime = LoadingTime.Text;
             }
             catch
             {
@@ -93,45 +94,22 @@ namespace ShortcutCreatorLDPlayer
             string tempSave = CustomShortcutDirectory + @"\" + SName + ".bat"; //Where .bat script is stored
             using (StreamWriter sw = new StreamWriter(tempSave))
             {
-                //Checks if the installation folder is in C: or other drive
-                if (Path.StartsWith("C:"))
-                {
-                    //.bat script creation
-                    sw.Write("@echo off" +
-                        "\ncd " + Path +
-                        "\ndnconsole.exe launch --name " + IName +
-                        "\n:waitt" +
-                        "\nTimeout 10" +
-                        "\n@SET MY_VAR=" +
-                        "\nFOR /F %%I IN ('ldconsole.exe runninglist') DO @SET " + doSet +
-                        "\n@REM" +
-                        "\necho %MY_VAR% FIND /I" + IName + ">Nul && (\n ldconsole runapp --name " + IName + " --packagename " + AName +
-                        "\n goto :end" + "\n) || (" +
-                        "\n goto :waitt" +
-                        "\n)" +
-                        "\n:end" +
-                        "\nbreak;"
-                    );
-                }
-                else
-                {
-                    //.bat script creation
-                    sw.Write("@echo off" +
-                        "\ncd /d " + Path +
-                        "\ndnconsole.exe launch --name " + IName +
-                        "\n:waitt" +
-                        "\nTimeout 15" +
-                        "\n@SET MY_VAR=" +
-                        "\nFOR /F %%I IN ('ldconsole.exe runninglist') DO @SET " + doSet +
-                        "\n@REM" +
-                        "\necho %MY_VAR% FIND /I" + IName + ">Nul && (\n ldconsole runapp --name " + IName + " --packagename " + AName +
-                        "\n goto :end" + "\n) || (" +
-                        "\n goto :waitt" +
-                        "\n)" +
-                        "\n:end" +
-                        "\nbreak;"
-                    );
-                }
+                //.bat script creation
+                sw.Write("@echo off" +
+                    "\ncd /d " + Path +
+                    "\ndnconsole.exe launch --name " + IName +
+                    "\n:waitt" +
+                    "\nTimeout " + loadingTime +
+                    "\n@SET MY_VAR=" +
+                    "\nFOR /F %%I IN ('ldconsole.exe runninglist') DO @SET " + doSet +
+                    "\n@REM" +
+                    "\necho %MY_VAR% FIND /I" + IName + ">Nul && (\n ldconsole runapp --name " + IName + " --packagename " + AName +
+                    "\n goto :end" + "\n) || (" +
+                    "\n goto :waitt" +
+                    "\n)" +
+                    "\n:end" +
+                    "\nbreak;"
+                );
             }
             try
             {
@@ -281,7 +259,16 @@ namespace ShortcutCreatorLDPlayer
                 foreach (string item in splitLine)
                 {
                     string[] tempSplit = item.Split(':'); //Splits Package Name and App Name
-                    Apps.Add(tempSplit[1], tempSplit[0]); //Storing all of the App Name and Package Name in a Dictionary
+                    if (!Apps.ContainsKey(tempSplit[1]))
+                    {
+                        if (!Apps.ContainsValue(tempSplit[0]))
+                        {
+                            Apps.Add(tempSplit[1], tempSplit[0]); //Storing all of the App Name and Package Name in a Dictionary
+                        }
+                    } else
+                    {
+                        Apps.Add(tempSplit[1] + " (2)", tempSplit[0]); //Storing all of the App Name and Package Name in a Dictionary
+                    }
                 }
                 foreach (string key in Apps.Keys)
                 {

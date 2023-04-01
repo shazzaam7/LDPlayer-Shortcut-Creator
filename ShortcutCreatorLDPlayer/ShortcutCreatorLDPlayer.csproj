@@ -53,7 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>1A3117E10E1348E7C46E6500EEF2BC4D6E1C4A0D</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>3F3BA08EFA9CDDD3142F97883870540D7B909FF5</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>ShortcutCreatorLDPlayer_TemporaryKey.pfx</ManifestKeyFile>
@@ -62,7 +62,7 @@
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>

@@ -1,22 +1,130 @@
-﻿<Window x:Class="ShortcutCreatorLDPlayer.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ShortcutCreatorLDPlayer"
-        mc:Ignorable="d"
-        Title="LDPlayer Shortcut Creator" Height="460" Width="500" ResizeMode="NoResize">
+﻿<Window
+    x:Class="ShortcutCreatorLDPlayer.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ShortcutCreatorLDPlayer"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="LDPlayer Shortcut Creator"
+    Width="500"
+    Height="460"
+    ResizeMode="NoResize"
+    mc:Ignorable="d">
     <Grid>
-        <TextBox x:Name="InstallationPath" HorizontalAlignment="Left" Margin="280,24,0,0" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Width="180" Height="20" TextAlignment="Center" FontSize="14"/>
-        <Label Content="LDPlayer Installation Path" HorizontalAlignment="Left" Margin="40,19,0,0" VerticalAlignment="Top" Height="30" Width="180" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Top"/>
-        <Label Content="Name of the Instance" HorizontalAlignment="Left" Margin="40,79,0,0" VerticalAlignment="Top" Height="30" Width="180" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
-        <ComboBox x:Name="Instances" HorizontalAlignment="Left" Margin="280,84,0,0" VerticalAlignment="Top" Width="180" Height="20"/>
-        <Button x:Name="CreateShortcut" Content="Create" HorizontalAlignment="Left" Margin="340,339,0,0" VerticalAlignment="Top" Width="60" FontSize="14" Height="30" Click="CreateShortcut_Click"/>
-        <Label Content="Installed Apps" HorizontalAlignment="Left" Margin="40,139,0,0" VerticalAlignment="Top" Height="30" Width="180" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
-        <ComboBox x:Name="InstalledApps" HorizontalAlignment="Left" Margin="280,144,0,0" VerticalAlignment="Top" Width="180" Height="20" SelectionChanged="InstalledApps_SelectionChanged"/>
-        <Label Content="Shortcut Name" HorizontalAlignment="Left" Margin="40,199,0,0" VerticalAlignment="Top" Height="30" Width="180" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
-        <TextBox x:Name="ShortcutName" HorizontalAlignment="Left" Margin="280,204,0,0" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" Width="180" Height="20" TextAlignment="Center" FontSize="14"/>
-        <CheckBox x:Name="ShortcutAsAdmin" Content="Make Shortcut Run as Administrator" HorizontalAlignment="Left" Margin="264,246,0,0" VerticalAlignment="Top"/>
-        <CheckBox x:Name="AddShortcutToSearch" Content="Add Shortcut to the Search" HorizontalAlignment="Left" Margin="288,289,0,0" VerticalAlignment="Top"/>
+        <TextBox
+            x:Name="InstallationPath"
+            Width="180"
+            Height="20"
+            Margin="280,24,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            FontSize="14"
+            TextAlignment="Center"
+            TextWrapping="WrapWithOverflow" />
+        <Label
+            Width="180"
+            Height="30"
+            Margin="40,19,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Top"
+            Content="LDPlayer Installation Path"
+            FontSize="14" />
+        <Label
+            Width="180"
+            Height="30"
+            Margin="40,79,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            Content="Name of the Instance"
+            FontSize="14" />
+        <ComboBox
+            x:Name="Instances"
+            Width="180"
+            Height="20"
+            Margin="280,84,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top" />
+        <Button
+            x:Name="CreateShortcut"
+            Width="60"
+            Height="30"
+            Margin="340,380,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Click="CreateShortcut_Click"
+            Content="Create"
+            FontSize="14" />
+        <Label
+            Width="180"
+            Height="30"
+            Margin="40,139,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            Content="Installed Apps"
+            FontSize="14" />
+        <ComboBox
+            x:Name="InstalledApps"
+            Width="180"
+            Height="20"
+            Margin="280,144,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            SelectionChanged="InstalledApps_SelectionChanged" />
+        <Label
+            Width="180"
+            Height="30"
+            Margin="40,199,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            Content="Shortcut Name"
+            FontSize="14" />
+        <TextBox
+            x:Name="ShortcutName"
+            Width="180"
+            Height="20"
+            Margin="280,204,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            FontSize="14"
+            TextAlignment="Center"
+            TextWrapping="WrapWithOverflow" />
+        <Label
+            Margin="83,256,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            Content="Loading Time"
+            FontSize="14" />
+        <TextBox
+            x:Name="LoadingTime"
+            Width="120"
+            Margin="310,261,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            FontSize="14"
+            Text="10"
+            TextAlignment="Center"
+            TextWrapping="WrapWithOverflow" />
+        <CheckBox
+            x:Name="ShortcutAsAdmin"
+            Margin="264,299,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Make Shortcut Run as Administrator" />
+        <CheckBox
+            x:Name="AddShortcutToSearch"
+            Margin="288,339,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Add Shortcut to the Search" />
     </Grid>
 </Window>
